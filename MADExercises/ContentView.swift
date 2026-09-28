@@ -42,7 +42,7 @@ struct ContentView: View {
                     .bold()
                     .frame(maxWidth: .infinity, alignment: .center)
                 
-                VStack(alignment: .leading, spacing: 8){
+                VStack(alignment: .leading, spacing: 8) {
                     Text("Email")
                         .font(.headline)
                     
@@ -89,7 +89,7 @@ struct ContentView: View {
                         ProgressView("Loading ...")
                             .progressViewStyle(.circular)
                     } else {
-                        Button{
+                        Button {
                             login()
                         } label: {
                             Text("Login")
@@ -115,6 +115,8 @@ struct ContentView: View {
             .padding(24)
             .background(Color.white)
             .cornerRadius(20)
+            .frame(maxWidth: 440)
+            .padding(.horizontal, 16)
             .shadow(color: Color.black.opacity(0.1), radius: 10)
             .alert(alertTitle, isPresented: $showAlert){
                 Button("OK", role: .cancel){
@@ -129,7 +131,8 @@ struct ContentView: View {
         guard !isLoading else {
             return
         }
-        guard !email.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+        let trimmedEmail = email.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedEmail.isEmpty else {
             displayAlert("Missing Email", "Please enter an email")
             return
         }
@@ -141,15 +144,14 @@ struct ContentView: View {
         isLoading = true
         focusedField = nil
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2){
-            
-            if(email == expectedEmail && password == expectedPassword)
-            {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            isLoading = false
+
+            if trimmedEmail == expectedEmail && password == expectedPassword {
                 displayAlert("Success", "Login successful!")
             } else {
                 displayAlert("Failed Login", "Email or Password is incorrect!")
             }
-            isLoading = false
         }
     }
     private func displayAlert(_ title: String,_ message: String){
